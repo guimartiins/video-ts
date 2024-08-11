@@ -1,3 +1,4 @@
+import { Entity } from '../../shared/domain/entity'
 import { UUID } from '../../shared/domain/value-objects/uuid.vo'
 import { CategoryValidatorFactory } from './category.validator'
 import { EntityValidationError } from './validators/validation.error'
@@ -16,7 +17,7 @@ export type CategoryCommander = {
 	is_active?: boolean
 }
 
-export class Category {
+export class Category extends Entity {
 	category_id: UUID
 	name: string
 	description: string | null
@@ -24,11 +25,16 @@ export class Category {
 	created_at: Date
 
 	constructor(props: CategoryConstructorProps) {
+		super()
 		this.category_id = props.category_id ?? new UUID()
 		this.name = props.name
 		this.description = props.description ?? null
 		this.is_active = props.is_active ?? true
 		this.created_at = props.created_at ?? new Date()
+	}
+
+	get entity_id() {
+		return this.category_id
 	}
 
 	// Factory method
