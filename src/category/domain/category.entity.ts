@@ -1,4 +1,6 @@
 import { UUID } from '../../shared/value-objects/uuid.vo'
+import { CategoryValidatorFactory } from './category.validator'
+import { EntityValidationError } from './validators/validation.error'
 
 export type CategoryConstructorProps = {
 	category_id?: UUID
@@ -31,23 +33,38 @@ export class Category {
 
 	// Factory method
 	static create(props: CategoryCommander): Category {
-		return new Category(props)
+		const category = new Category(props)
+		Category.validate(category)
+		return category
 	}
 
 	changeName(name: string): void {
 		this.name = name
+		Category.validate(this)
 	}
 
 	changeDescription(description: string): void {
 		this.description = description
+		Category.validate(this)
 	}
 
 	activate(): void {
 		this.is_active = true
+		Category.validate(this)
 	}
 
 	deactivate(): void {
 		this.is_active = false
+		Category.validate(this)
+	}
+
+	static validate(entity: Category) {
+		const validator = CategoryValidatorFactory.create()
+		const isValid = validator.validate(entity)
+
+		if (!isValid) {
+			throw new EntityValidationError(validator.errors)
+		}
 	}
 
 	toJSON() {

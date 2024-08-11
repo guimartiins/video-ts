@@ -6,6 +6,7 @@ import {
 	MaxLength,
 } from 'class-validator'
 import { Category } from './category.entity'
+import { ClassValidatorFields } from './validators/class-validator-fields'
 
 export class CategoryRules {
 	@MaxLength(255)
@@ -18,15 +19,21 @@ export class CategoryRules {
 	description: string | null
 
 	@IsBoolean()
-	isActive: boolean
+	is_active: boolean
 
-	constructor(name: string, description: string | null, isActive: boolean) {
-		Object.assign(this, { name, description, isActive })
+	constructor({name, description, is_active}: Category) {
+		Object.assign(this, { name, description, is_active })
 	}
 }
 
-class CategoryValidator {
-    validate(entity: Category) {
+export class CategoryValidator extends ClassValidatorFields<CategoryRules> {
+	validate(entity: Category) {
+		return super.validate(new CategoryRules(entity))
+	}
+}
 
-    }
+export class CategoryValidatorFactory {
+	static create() {
+		return new CategoryValidator()
+	}
 }
