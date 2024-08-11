@@ -1,4 +1,4 @@
-import { UUID } from '../../../shared/value-objects/uuid.vo'
+import { UUID } from '../../../shared/domain/value-objects/uuid.vo'
 import { Category } from '../category.entity'
 
 describe('Category Unit tests', () => {
