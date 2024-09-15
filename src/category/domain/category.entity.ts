@@ -1,5 +1,6 @@
 import { Entity } from '../../shared/domain/entity'
 import { UUID } from '../../shared/domain/value-objects/uuid.vo'
+import { CategoryFakeBuilder } from './category-fake.builder'
 import { CategoryValidatorFactory } from './category.validator'
 import { EntityValidationError } from './validators/validation.error'
 
@@ -71,6 +72,10 @@ export class Category extends Entity {
 		if (!isValid) {
 			throw new EntityValidationError(validator.errors)
 		}
+	}
+
+	static fake() {
+		return CategoryFakeBuilder
 	}
 
 	toJSON() {
