@@ -73,37 +73,31 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     }
 
     getEntity(): new (...args: any[]) => Category {
-        throw new Error("Method not implemented.");
+        return Category
     }
 
     async search(props: CategorySearchParams): Promise<CategorySearchResult> {
-        const offset = (props.page - 1) * props.per_page
-        const limit = props.per_page
-
+        const offset = (props.page - 1) * props.per_page;
+        const limit = props.per_page;
         const { rows: models, count } = await this.categoryModel.findAndCountAll({
             ...(props.filter && {
                 where: {
-                    name: { [Op.like]: `%${props.filter}%` }
-                }
+                    name: { [Op.like]: `%${props.filter}%` },
+                },
             }),
-            ...(props.sort && this.sortableFields.includes(props.sort)) ? { order: [[props.sort, props.sort_dir]] } : { order: [['created_at', 'desc']] },
+            ...(props.sort && this.sortableFields.includes(props.sort)
+                ? { order: [[props.sort, props.sort_dir]] }
+                : { order: [["created_at", "desc"]] }),
             offset,
-            limit
-        })
-
+            limit,
+        });
         return new CategorySearchResult({
-            items: models.map(model => new Category(
-                {
-                    category_id: new UUID(model.category_id),
-                    name: model.name,
-                    description: model.description,
-                    is_active: model.is_active,
-                    created_at: model.created_at
-                }
-            )),
+            items: models.map((model) => {
+                return CategoryModelMapper.toEntity(model);
+            }),
             current_page: props.page,
             per_page: props.per_page,
-            total: count
-        })
+            total: count,
+        });
     }
 }
