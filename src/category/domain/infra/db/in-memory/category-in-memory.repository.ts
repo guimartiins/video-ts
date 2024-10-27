@@ -2,8 +2,9 @@ import { SortDirection } from "../../../../../shared/domain/repository/search-pa
 import { UUID } from "../../../../../shared/domain/value-objects/uuid.vo";
 import { InMemorySearchableRepository } from "../../../../../shared/infra/db/in-memory/in-memory.repository";
 import { Category } from "../../../category.entity";
+import { ICategoryRepository } from "../../../category.repository";
 
-export class CategoryInMemoryRepository extends InMemorySearchableRepository<Category, UUID> {
+export class CategoryInMemoryRepository extends InMemorySearchableRepository<Category, UUID> implements ICategoryRepository {
     sortableFields = ['name', 'created_at']
     protected async applyFilter(items: Category[], filter: string): Promise<Category[]> {
         if (!filter) {
