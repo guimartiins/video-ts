@@ -1,8 +1,8 @@
-import { NotFoundError } from "../../../shared/domain/errors/not-found.error";
-import { InvalidUUIDError, UUID } from "../../../shared/domain/value-objects/uuid.vo";
-import { UpdateCategoryUseCase } from "../../application/update-category.use-case";
-import { Category } from "../category.entity";
-import { CategoryInMemoryRepository } from "../infra/db/in-memory/category-in-memory.repository";
+import { NotFoundError } from "../../../../../shared/domain/errors/not-found.error";
+import { InvalidUUIDError, UUID } from "../../../../../shared/domain/value-objects/uuid.vo";
+import { Category } from "../../../../domain/category.entity";
+import { CategoryInMemoryRepository } from "../../../../domain/infra/db/in-memory/category-in-memory.repository";
+import { UpdateCategoryUseCase } from "../../update-category.use-case";
 
 describe("UpdateCategoryUseCase Unit Tests", () => {
     let useCase: UpdateCategoryUseCase;
