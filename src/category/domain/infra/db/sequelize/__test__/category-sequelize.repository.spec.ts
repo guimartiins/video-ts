@@ -6,21 +6,12 @@ import { UUID } from "../../../../../../shared/domain/value-objects/uuid.vo";
 import { CategoryModelMapper } from "../category-model-mapper";
 import { CategorySearchParams, CategorySearchResult } from "../../../../category.repository";
 import { NotFoundError } from "../../../../../../shared/domain/errors/not-found.error";
+import { setupSequelize } from "../../../../../../shared/infra/testing/helpers";
 
 describe("CategorySequelizeRepository Integration Test", () => {
-    let sequelize;
-    let repository: CategorySequelizeRepository;
+    setupSequelize({ models: [CategoryModel] });
+    const repository = new CategorySequelizeRepository(CategoryModel);
 
-    beforeEach(async () => {
-        sequelize = new Sequelize({
-            dialect: "sqlite",
-            storage: ":memory:",
-            models: [CategoryModel],
-            logging: false,
-        });
-        await sequelize.sync({ force: true });
-        repository = new CategorySequelizeRepository(CategoryModel);
-    });
 
     it("should inserts a new entity", async () => {
         let category = Category.fake().aCategory().build();
