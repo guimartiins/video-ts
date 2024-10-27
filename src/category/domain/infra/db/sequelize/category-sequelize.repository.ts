@@ -7,6 +7,7 @@ import { UUID } from "../../../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../../../category.entity";
 import { CategorySearchParams, CategorySearchResult, ICategoryRepository } from "../../../category.repository";
 import { CategoryModel } from "./category.model";
+import { CategoryModelMapper } from "./category-model-mapper";
 
 export class CategorySequelizeRepository implements ICategoryRepository {
     sortableFields: string[] = ['name', 'created_at'];
@@ -16,22 +17,12 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     }
 
     async insert(entity: Category): Promise<void> {
-        await this.categoryModel.create({
-            category_id: entity.category_id.id,
-            name: entity.name,
-            description: entity.description,
-            is_active: entity.is_active,
-            created_at: entity.created_at,
-        });
+        const model = CategoryModelMapper.toModel(entity)
+        await this.categoryModel.create(model.toJSON());
     }
     async bulkInsert(entities: Category[]): Promise<void> {
-        await this.categoryModel.bulkCreate(entities.map(entity => ({
-            category_id: entity.category_id.id,
-            name: entity.name,
-            description: entity.description,
-            is_active: entity.is_active,
-            created_at: entity.created_at,
-        })))
+        const models = entities.map(entity => (CategoryModelMapper.toModel(entity).toJSON()))
+        await this.categoryModel.bulkCreate(models);
     }
     async update(entity: Category): Promise<void> {
         const id = entity.category_id.id
@@ -41,12 +32,9 @@ export class CategorySequelizeRepository implements ICategoryRepository {
             throw new NotFoundError(id, this.getEntity())
         }
 
-        await this.categoryModel.update({
-            name: entity.name,
-            description: entity.description,
-            is_active: entity.is_active,
-            created_at: entity.created_at
-        }, {
+        const modelToUpdate = CategoryModelMapper.toModel(entity)
+
+        await this.categoryModel.update(modelToUpdate.toJSON(), {
             where: {
                 category_id: id
             }
@@ -70,27 +58,12 @@ export class CategorySequelizeRepository implements ICategoryRepository {
 
     async findById(id: UUID): Promise<Category | null> {
         const model = await this._get(id.id)
-        return new Category(
-            {
-                category_id: new UUID(model.category_id),
-                name: model.name,
-                description: model.description,
-                is_active: model.is_active,
-                created_at: model.created_at
-            }
-        )
+
+        return model ? CategoryModelMapper.toEntity(model) : null
     }
     async findAll(): Promise<Category[]> {
         const models = await this.categoryModel.findAll();
-        return models.map(model => new Category(
-            {
-                category_id: new UUID(model.category_id),
-                name: model.name,
-                description: model.description,
-                is_active: model.is_active,
-                created_at: model.created_at
-            }
-        ));
+        return models.map(model => CategoryModelMapper.toEntity(model));
     }
 
     private async _get(id: string) {
