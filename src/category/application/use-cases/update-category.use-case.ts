@@ -3,6 +3,7 @@ import { NotFoundError } from "../../../shared/domain/errors/not-found.error";
 import { UUID } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../../domain/category.entity";
 import { ICategoryRepository } from "../../domain/category.repository";
+import { EntityValidationError } from "../../domain/validators/validation.error";
 import { CategoryOutput, CategoryOutputMapper } from "./common/category-output";
 export class UpdateCategoryUseCase
     implements IUseCase<UpdateCategoryInput, UpdateCategoryOutput> {
@@ -23,6 +24,11 @@ export class UpdateCategoryUseCase
         if (input.is_active === false) {
             category.deactivate();
         }
+
+        if (category.notification.hasErrors()) {
+            throw new EntityValidationError(category.notification.toJSON());
+        }
+
         await this.categoryRepo.update(category);
         return CategoryOutputMapper.toOutput(category);
     }

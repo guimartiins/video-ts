@@ -14,6 +14,15 @@ describe("CreateCategoryUseCase Integration Tests", () => {
         repository = new CategorySequelizeRepository(CategoryModel);
         useCase = new CreateCategoryUseCase(repository);
     });
+
+    it('should throw an error when aggregate is not valid', async () => {
+        const input = { name: 't'.repeat(256) };
+        await expect(() => useCase.execute(input)).rejects.toThrow(
+            'Entity Validation Error',
+        );
+    });
+
+
     it("should create a category", async () => {
         let output = await useCase.execute({ name: "test" });
         let entity = await repository.findById(new UUID(output.id));

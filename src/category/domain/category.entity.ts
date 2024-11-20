@@ -2,7 +2,6 @@ import { Entity } from '../../shared/domain/entity'
 import { UUID } from '../../shared/domain/value-objects/uuid.vo'
 import { CategoryFakeBuilder } from './category-fake.builder'
 import { CategoryValidatorFactory } from './category.validator'
-import { EntityValidationError } from './validators/validation.error'
 
 export type CategoryConstructorProps = {
 	category_id?: UUID
@@ -41,37 +40,30 @@ export class Category extends Entity {
 	// Factory method
 	static create(props: CategoryCommander): Category {
 		const category = new Category(props)
-		Category.validate(category)
+		category.validate(['name'])
 		return category
 	}
 
 	changeName(name: string): void {
 		this.name = name
-		Category.validate(this)
+		this.validate(['name'])
 	}
 
 	changeDescription(description: string): void {
 		this.description = description
-		Category.validate(this)
 	}
 
 	activate(): void {
 		this.is_active = true
-		Category.validate(this)
 	}
 
 	deactivate(): void {
 		this.is_active = false
-		Category.validate(this)
 	}
 
-	static validate(entity: Category) {
+	validate(fields?: string[]) {
 		const validator = CategoryValidatorFactory.create()
-		const isValid = validator.validate(entity)
-
-		if (!isValid) {
-			throw new EntityValidationError(validator.errors)
-		}
+		return validator.validate(this.notification, this, fields)
 	}
 
 	static fake() {
