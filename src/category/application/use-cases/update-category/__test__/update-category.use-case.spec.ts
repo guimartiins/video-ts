@@ -1,36 +1,38 @@
 import { NotFoundError } from "../../../../../shared/domain/errors/not-found.error";
-import { UUID } from "../../../../../shared/domain/value-objects/uuid.vo";
-import { setupSequelize } from "../../../../../shared/infra/testing/helpers";
+import { InvalidUUIDError, UUID } from "../../../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../../../../domain/category.entity";
-import { CategorySequelizeRepository } from "../../../../domain/infra/db/sequelize/category-sequelize.repository";
-import { CategoryModel } from "../../../../domain/infra/db/sequelize/category.model";
-import { UpdateCategoryUseCase } from "../../update-category.use-case";
+import { CategoryInMemoryRepository } from "../../../../domain/infra/db/in-memory/category-in-memory.repository";
+import { UpdateCategoryUseCase } from "../update-category.use-case";
 
-describe('UpdateCategoryUseCase Integration Tests', () => {
+describe("UpdateCategoryUseCase Unit Tests", () => {
     let useCase: UpdateCategoryUseCase;
-    let repository: CategorySequelizeRepository;
-    setupSequelize({ models: [CategoryModel] });
+    let repository: CategoryInMemoryRepository;
     beforeEach(() => {
-        repository = new CategorySequelizeRepository(CategoryModel);
+        repository = new CategoryInMemoryRepository();
         useCase = new UpdateCategoryUseCase(repository);
     });
-    it('should throws error when entity not found', async () => {
+    it("should throws error when entity not found", async () => {
+        await expect(() =>
+            useCase.execute({ id: "fake id", name: "fake" })
+        ).rejects.toThrow(new InvalidUUIDError());
         const uuid = new UUID();
         await expect(() =>
-            useCase.execute({ id: uuid.id, name: 'fake' }),
+            useCase.execute({ id: uuid.id, name: "fake" })
         ).rejects.toThrow(new NotFoundError(uuid.id, Category));
     });
-    it('should update a category', async () => {
-        const entity = Category.fake().aCategory().build();
-        repository.insert(entity);
+    it("should update a category", async () => {
+        const spyUpdate = jest.spyOn(repository, "update");
+        const entity = new Category({ name: "Movie" });
+        repository.items = [entity];
         let output = await useCase.execute({
             id: entity.category_id.id,
-            name: 'test',
+            name: "test",
         });
+        expect(spyUpdate).toHaveBeenCalledTimes(1);
         expect(output).toStrictEqual({
             id: entity.category_id.id,
-            name: 'test',
-            description: entity.description,
+            name: "test",
+            description: null,
             is_active: true,
             created_at: entity.created_at,
         });
@@ -53,13 +55,13 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
             {
                 input: {
                     id: entity.category_id.id,
-                    name: 'test',
-                    description: 'some description',
+                    name: "test",
+                    description: "some description",
                 },
                 expected: {
                     id: entity.category_id.id,
-                    name: 'test',
-                    description: 'some description',
+                    name: "test",
+                    description: "some description",
                     is_active: true,
                     created_at: entity.created_at,
                 },
@@ -67,12 +69,12 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
             {
                 input: {
                     id: entity.category_id.id,
-                    name: 'test',
+                    name: "test",
                 },
                 expected: {
                     id: entity.category_id.id,
-                    name: 'test',
-                    description: 'some description',
+                    name: "test",
+                    description: "some description",
                     is_active: true,
                     created_at: entity.created_at,
                 },
@@ -80,13 +82,13 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
             {
                 input: {
                     id: entity.category_id.id,
-                    name: 'test',
+                    name: "test",
                     is_active: false,
                 },
                 expected: {
                     id: entity.category_id.id,
-                    name: 'test',
-                    description: 'some description',
+                    name: "test",
+                    description: "some description",
                     is_active: false,
                     created_at: entity.created_at,
                 },
@@ -94,12 +96,12 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
             {
                 input: {
                     id: entity.category_id.id,
-                    name: 'test',
+                    name: "test",
                 },
                 expected: {
                     id: entity.category_id.id,
-                    name: 'test',
-                    description: 'some description',
+                    name: "test",
+                    description: "some description",
                     is_active: false,
                     created_at: entity.created_at,
                 },
@@ -107,13 +109,13 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
             {
                 input: {
                     id: entity.category_id.id,
-                    name: 'test',
+                    name: "test",
                     is_active: true,
                 },
                 expected: {
                     id: entity.category_id.id,
-                    name: 'test',
-                    description: 'some description',
+                    name: "test",
+                    description: "some description",
                     is_active: true,
                     created_at: entity.created_at,
                 },
@@ -121,14 +123,14 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
             {
                 input: {
                     id: entity.category_id.id,
-                    name: 'test',
-                    description: null,
+                    name: "test",
+                    description: "some description",
                     is_active: false,
                 },
                 expected: {
                     id: entity.category_id.id,
-                    name: 'test',
-                    description: null,
+                    name: "test",
+                    description: "some description",
                     is_active: false,
                     created_at: entity.created_at,
                 },
@@ -137,24 +139,16 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
         for (const i of arrange) {
             output = await useCase.execute({
                 id: i.input.id,
-                ...(i.input.name && { name: i.input.name }),
-                ...('description' in i.input && { description: i.input.description }),
-                ...('is_active' in i.input && { is_active: i.input.is_active }),
+                ...("name" in i.input && { name: i.input.name }),
+                ...("description" in i.input && { description: i.input.description }),
+                ...("is_active" in i.input && { is_active: i.input.is_active }),
             });
-            const entityUpdated = await repository.findById(new UUID(i.input.id));
             expect(output).toStrictEqual({
                 id: entity.category_id.id,
                 name: i.expected.name,
                 description: i.expected.description,
                 is_active: i.expected.is_active,
-                created_at: entityUpdated.created_at,
-            });
-            expect(entityUpdated.toJSON()).toStrictEqual({
-                category_id: entity.category_id.id,
-                name: i.expected.name,
-                description: i.expected.description,
-                is_active: i.expected.is_active,
-                created_at: entityUpdated.created_at,
+                created_at: i.expected.created_at,
             });
         }
     });

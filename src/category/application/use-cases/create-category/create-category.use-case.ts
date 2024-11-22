@@ -1,8 +1,9 @@
-import { IUseCase } from "../../../shared/application/use-case.interface";
-import { Category } from "../../domain/category.entity";
-import { ICategoryRepository } from "../../domain/category.repository";
-import { EntityValidationError } from "../../domain/validators/validation.error";
-import { CategoryOutput, CategoryOutputMapper } from "./common/category-output";
+import { IUseCase } from "../../../../shared/application/use-case.interface"
+import { Category } from "../../../domain/category.entity"
+import { ICategoryRepository } from "../../../domain/category.repository"
+import { EntityValidationError } from "../../../domain/validators/validation.error"
+import { CategoryOutput, CategoryOutputMapper } from "../common/category-output"
+import { CreateCategoryInput } from "./create-category.input"
 
 export class CreateCategoryUseCase implements IUseCase<CreateCategoryInput, CreateCategoryOutput> {
     constructor(private readonly categoryRepo: ICategoryRepository) { }
@@ -18,12 +19,6 @@ export class CreateCategoryUseCase implements IUseCase<CreateCategoryInput, Crea
 
         return CategoryOutputMapper.toOutput(entity)
     }
-}
-
-export type CreateCategoryInput = {
-    name: string
-    description?: string | null
-    is_active?: boolean
 }
 
 export type CreateCategoryOutput = CategoryOutput
