@@ -5,6 +5,7 @@ import { Category } from '../../../domain/category.entity'
 import { ICategoryRepository } from '../../../domain/category.repository'
 import { EntityValidationError } from '../../../domain/validators/validation.error'
 import { CategoryOutput, CategoryOutputMapper } from '../common/category-output'
+import { UpdateCategoryInput } from './update-category.input'
 export class UpdateCategoryUseCase
   implements IUseCase<UpdateCategoryInput, UpdateCategoryOutput>
 {
@@ -15,6 +16,7 @@ export class UpdateCategoryUseCase
     if (!category) {
       throw new NotFoundError(input.id, Category)
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     input.name && category.changeName(input.name)
     if ('description' in input) {
       category.changeDescription(input.description)
@@ -33,11 +35,5 @@ export class UpdateCategoryUseCase
     await this.categoryRepo.update(category)
     return CategoryOutputMapper.toOutput(category)
   }
-}
-export type UpdateCategoryInput = {
-  id: string
-  name?: string
-  description?: string
-  is_active?: boolean
 }
 export type UpdateCategoryOutput = CategoryOutput
