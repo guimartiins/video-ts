@@ -7,7 +7,8 @@ import {
   Param,
   Delete,
   Inject,
-  ParseUUIDPipe
+  ParseUUIDPipe,
+  HttpCode
 } from '@nestjs/common'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
@@ -63,8 +64,11 @@ export class CategoriesController {
     return CategoriesController.serialize(output)
   }
 
+  @HttpCode(204)
   @Delete(':id')
-  remove(@Param('id') id: string) {}
+  remove(@Param('id') id: string) {
+    return this.deleteUseCase.execute({ id })
+  }
 
   static serialize(output: CategoryOutput) {
     return new CategoryPresenter(output)
