@@ -18,7 +18,7 @@ export class UpdateCategoryUseCase
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     input.name && category.changeName(input.name)
-    if ('description' in input) {
+    if (input.description !== undefined) {
       category.changeDescription(input.description)
     }
     if (input.is_active === true) {
