@@ -215,7 +215,8 @@ const config: Config = {
     'validator-rules.ts',
     '-fixture.ts',
     '.input.ts',
-    '.d.ts'
+    '.d.ts',
+    '.dto.ts'
   ],
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
