@@ -40,8 +40,7 @@ describe('DatabaseModule Unit Tests', () => {
       DB_USERNAME: 'root',
       DB_PASSWORD: 'root',
       DB_PORT: 3306,
-      DB_LOGGING: false,
-      DB_AUTO_LOAD_MODELS: true
+      DB_LOGGING: false
     }
     it('should be a mysql connection', async () => {
       const module = await Test.createTestingModule({
