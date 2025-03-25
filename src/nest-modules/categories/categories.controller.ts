@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
-import { CategorySequelizeRepository } from '@core/category/domain/infra/db/sequelize/category-sequelize.repository'
+import { CategorySequelizeRepository } from '@core/category/infra/db/sequelize/category-sequelize.repository'
 import { CreateCategoryUseCase } from '@core/category/application/use-cases/create-category/create-category.use-case'
 import { UpdateCategoryUseCase } from '@core/category/application/use-cases/update-category/update-category.use-case'
 import { DeleteCategoryUseCase } from '@core/category/application/use-cases/delete-category/delete-category.use-case'

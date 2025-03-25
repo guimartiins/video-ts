@@ -1,12 +1,12 @@
 import { literal, Op } from 'sequelize'
-import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error'
-import { UUID } from '../../../../../shared/domain/value-objects/uuid.vo'
-import { Category } from '../../../category.entity'
+import { NotFoundError } from '../../../../shared/domain/errors/not-found.error'
+import { UUID } from '../../../../shared/domain/value-objects/uuid.vo'
+import { Category } from '../../../domain/category.entity'
 import {
   CategorySearchParams,
   CategorySearchResult,
   ICategoryRepository
-} from '../../../category.repository'
+} from '../../../domain/category.repository'
 import { CategoryModel } from './category.model'
 import { CategoryModelMapper } from './category-model-mapper'
 import { SortDirection } from '@core/shared/domain/repository/search-params'

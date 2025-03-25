@@ -5,9 +5,9 @@ import { ListCategoriesUseCase } from '../../core/category/application/use-cases
 import { GetCategoryUseCase } from '../../core/category/application/use-cases/get-category/get-category.use-case'
 import { DeleteCategoryUseCase } from '../../core/category/application/use-cases/delete-category/delete-category.use-case'
 import { ICategoryRepository } from '../../core/category/domain/category.repository'
-import { CategorySequelizeRepository } from '@core/category/domain/infra/db/sequelize/category-sequelize.repository'
-import { CategoryInMemoryRepository } from '@core/category/infra/db/category-in-memory.repository'
-import { CategoryModel } from '@core/category/domain/infra/db/sequelize/category.model'
+import { CategorySequelizeRepository } from '@core/category/infra/db/sequelize/category-sequelize.repository'
+import { CategoryModel } from '@core/category/infra/db/sequelize/category.model'
+import { CategoryInMemoryRepository } from '@core/category/infra/db/in-memory/category-in-memory.repository'
 
 export const REPOSITORIES = {
   CATEGORY_REPOSITORY: {

@@ -1,15 +1,15 @@
 import { Sequelize } from 'sequelize-typescript'
 import { CategorySequelizeRepository } from '../category-sequelize.repository'
 import { CategoryModel } from '../category.model'
-import { Category } from '../../../../category.entity'
-import { UUID } from '../../../../../../shared/domain/value-objects/uuid.vo'
+import { Category } from '../../../../domain/category.entity'
+import { UUID } from '../../../../../shared/domain/value-objects/uuid.vo'
 import { CategoryModelMapper } from '../category-model-mapper'
 import {
   CategorySearchParams,
   CategorySearchResult
-} from '../../../../category.repository'
-import { NotFoundError } from '../../../../../../shared/domain/errors/not-found.error'
-import { setupSequelize } from '../../../../../../shared/infra/testing/helpers'
+} from '../../../../domain/category.repository'
+import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error'
+import { setupSequelize } from '../../../../../shared/infra/testing/helpers'
 
 describe('CategorySequelizeRepository Integration Test', () => {
   setupSequelize({ models: [CategoryModel] })
