@@ -16,7 +16,7 @@ import { DatabaseModule } from 'src/nest-modules/database/database.module'
 import { CategoriesModule } from '../categories.module'
 import { CATEGORY_PROVIDERS } from '../categories-provider'
 import { ConfigModule } from 'src/nest-modules/config/config.module'
-import { Category } from '@core/category/domain/category.entity'
+import { Category } from '@core/category/domain/category.aggregate'
 
 describe('Categories Controller integration tests', () => {
   let controller: CategoriesController

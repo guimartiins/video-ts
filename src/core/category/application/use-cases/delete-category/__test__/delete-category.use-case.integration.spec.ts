@@ -2,7 +2,7 @@ import { setupSequelize } from '../../../../../shared/infra/testing/helpers'
 import { CategorySequelizeRepository } from '../../../../infra/db/sequelize/category-sequelize.repository'
 import { CategoryModel } from '../../../../infra/db/sequelize/category.model'
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error'
-import { Category } from '../../../../domain/category.entity'
+import { Category } from '../../../../domain/category.aggregate'
 import { UUID } from '../../../../../shared/domain/value-objects/uuid.vo'
 import { DeleteCategoryUseCase } from '../delete-category.use-case'
 

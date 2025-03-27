@@ -1,5 +1,5 @@
 import { MaxLength } from 'class-validator'
-import { Category } from './category.entity'
+import { Category } from './category.aggregate'
 import { ClassValidatorFields } from './validators/class-validator-fields'
 import { Notification } from './validators/notification'
 

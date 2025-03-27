@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript'
 import { CategorySequelizeRepository } from '../category-sequelize.repository'
 import { CategoryModel } from '../category.model'
-import { Category } from '../../../../domain/category.entity'
+import { Category } from '../../../../domain/category.aggregate'
 import { UUID } from '../../../../../shared/domain/value-objects/uuid.vo'
 import { CategoryModelMapper } from '../category-model-mapper'
 import {
