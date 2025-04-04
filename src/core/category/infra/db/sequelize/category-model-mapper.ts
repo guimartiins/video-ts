@@ -1,6 +1,6 @@
 import { UUID } from '../../../../shared/domain/value-objects/uuid.vo'
 import { Category } from '../../../domain/category.aggregate'
-import { EntityValidationError } from '../../../domain/validators/validation.error'
+import { LoadEntityError } from '../../../domain/validators/validation.error'
 import { CategoryModel } from './category.model'
 
 export class CategoryModelMapper {
@@ -27,7 +27,7 @@ export class CategoryModelMapper {
     category.validate()
 
     if (category.notification.hasErrors()) {
-      throw new EntityValidationError(category.notification.toJSON())
+      throw new LoadEntityError(category.notification.toJSON())
     }
     return category
   }
